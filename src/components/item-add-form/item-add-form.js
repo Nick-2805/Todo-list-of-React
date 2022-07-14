@@ -1,16 +1,38 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import './item-add-form.css'
 
-export default class ItemAddForm extends Component{
+export default class ItemAddForm extends Component {
+
+    state = {
+        label: ''
+    }
+
+    onLabelChange = (e) => {
+        this.setState({
+            label: e.target.value
+        })
+    }
+    onSubmit = (e) => {
+        e.preventDefault();
+        this.props.addItem(this.state.label)
+    }
+
     render() {
         return (
-            <div className='item-add-form'>
+            <form className='item-add-form d-flex'
+                  onSubmit={this.onSubmit}
+            >
+                <input type="text"
+                       className='form-control'
+                       onChange={this.onLabelChange}
+                    // onChange={this.onLabelChange}
+                       placeholder='Whats needs to be done ?'
+                />
                 <button className='btn btn-outline-secondary'
-                        onClick={() => this.props.addItem('Hello World!')}
                 >
                     Add item
                 </button>
-            </div>
+            </form>
         );
     }
 }

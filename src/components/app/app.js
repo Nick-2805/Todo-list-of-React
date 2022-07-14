@@ -50,11 +50,12 @@ export default class App extends Component {
     }
     addItem = (text) => {
         //generate id ?
-        const newItem = {
-            label: text,
-            important: false,
-            id: this.maxId++
-        }
+        // const newItem = {
+        //     label: text,
+        //     important: false,
+        //     id: this.maxId++
+        // }
+        const newItem = this.createTodoItem(text)
 
         //add element in array
         this.setState(({todoData}) => {
@@ -68,36 +69,63 @@ export default class App extends Component {
         })
     }
 
-    onToggleDone = (id) => {
-        this.setState(({ todoData }) => {
-            const ind = todoData.findIndex((el) => el.id === id)
-            //1. update obj
-            const oldItem = todoData[ind]
-            const newItem = { ...oldItem, done: !oldItem.done}
+    toggleProperty(arr, id, propName) {
 
-            //2. construct newArr
-            const newArr = [
-                ...todoData.slice(0, ind),
-                newItem,
-                ...todoData.slice(ind + 1)
-            ]
+        const ind = arr.findIndex((el) => el.id === id);
+        //1. update obj
+        const oldItem = arr[ind];
+        const newItem = {...oldItem, [propName]: !oldItem[propName]};
+
+        //2. construct newArr
+        return [
+            ...arr.slice(0, ind),
+            newItem,
+            ...arr.slice(ind + 1)
+
+        ]
+    }
+
+    onToggleDone = (id) => {
+        this.setState(({todoData}) => {
+            //     const ind = todoData.findIndex((el) => el.id === id);
+            //     //1. update obj
+            //     const oldItem = todoData[ind];
+            //     const newItem = { ...oldItem, done: !oldItem.done};
+            //
+            //     //2. construct newArr
+            //     const newArr = [
+            //         ...todoData.slice(0, ind),
+            //         newItem,
+            //         ...todoData.slice(ind + 1)
+            //     ];
+            //     return {
+            //         todoData: newArr
+            //     };
+            //--------------------- или -------------------------------
             return {
-                todoData: newArr
-            }
-        })
+                        todoData: this.toggleProperty(todoData, id, 'done')
+                    };
+        });
     }
 
     onToggleImportant = (id) => {
-        console.log('Important', id)
+       this.setState(({ todoData }) => {
+           return {
+               todoData: this.toggleProperty(todoData, id, 'important')
+           }
+       })
     }
 
 
     render() {
+        const {todoData} = this.state
+        const doneCount = todoData.filter((el) => el.done).length;
+        const todoCount = todoData.length - doneCount;
         return (
             <div className="todo-app">
                 <AppHeader
-                    toDo={1}
-                    done={3}
+                    toDo={todoCount}
+                    done={doneCount}
                 />
                 <div className="top-panel d-flex">
                     <SearchPanel/>
