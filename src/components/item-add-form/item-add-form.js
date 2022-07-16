@@ -9,12 +9,15 @@ export default class ItemAddForm extends Component {
 
     onLabelChange = (e) => {
         this.setState({
-            label: e.target.value
+            label: e.target.value.toUpperCase()
         })
     }
     onSubmit = (e) => {
         e.preventDefault();
         this.props.addItem(this.state.label)
+        this.setState({
+            label: ''
+        })
     }
 
     render() {
@@ -27,6 +30,7 @@ export default class ItemAddForm extends Component {
                        onChange={this.onLabelChange}
                     // onChange={this.onLabelChange}
                        placeholder='Whats needs to be done ?'
+                       value={this.state.label}
                 />
                 <button className='btn btn-outline-secondary'
                 >
